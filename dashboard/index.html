@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>LAUNCH RADAR — The Pre-Token 758</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="mark">◉</div>
+    <div>
+      <h1>LAUNCH RADAR</h1>
+      <p class="sub">The Pre-Token 758 — every protocol in the sealed snapshot, ranked by what its token would be worth.</p>
+    </div>
+  </div>
+  <dl class="stats" id="stats"></dl>
+</header>
+
+<section class="pick" id="pick"></section>
+
+<section class="panel controls" aria-label="Filters">
+  <label>Category
+    <select id="f-cat"></select>
+  </label>
+  <label>Chain
+    <select id="f-chain"></select>
+  </label>
+  <label>TVL band
+    <select id="f-band">
+      <option value="">All sizes</option>
+      <option value="huge">Over $1B</option>
+      <option value="mid">$50M – $1B</option>
+      <option value="early">Under $50M</option>
+    </select>
+  </label>
+  <label class="check"><input type="checkbox" id="f-wl"> Watchlist only</label>
+  <label class="search">Search
+    <input type="search" id="f-q" placeholder="protocol name or slug…" autocomplete="off">
+  </label>
+  <button id="f-clear" type="button">Clear</button>
+  <p class="count" id="count"></p>
+</section>
+
+<main>
+  <section class="panel board">
+    <h2>Ranked board <span class="hint">click a column to sort · click a row for the detail view</span></h2>
+    <div class="tablewrap">
+      <table id="board">
+        <colgroup>
+          <col style="width:48px"><col style="width:150px"><col style="width:118px"><col style="width:180px">
+          <col style="width:80px"><col style="width:56px"><col style="width:104px"><col>
+        </colgroup>
+        <thead>
+          <tr>
+            <th data-k="rank">#</th>
+            <th data-k="name">Protocol</th>
+            <th data-k="cat">Category</th>
+            <th data-k="chains">Chains</th>
+            <th data-k="tvl">TVL</th>
+            <th data-k="chg">7d</th>
+            <th data-k="value">Implied value</th>
+            <th>Farm first step</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel detail" id="detail" hidden>
+    <button id="d-close" type="button" aria-label="Close detail">✕</button>
+    <div id="detail-body"></div>
+  </section>
+
+  <section class="panel method">
+    <h2>Methodology — how every number is made</h2>
+    <p>Every figure on this page is derived from the sealed snapshot's own numbers. Nothing is a hand-kept list: the same snapshot always produces the same board.</p>
+    <p><code>score = ( 10·ln(TVL / $1M) + 8·clamp(7d change, −25%, +50%) / 50 + 1.2·min(years listed, 6) + 2.5·ln(1 + min(chains, 20)) ) × category multiplier + 12 if no token is recorded</code></p>
+    <p>The category multiplier comes from that category's median TVL in the snapshot (0.80–1.25): categories whose protocols are typically larger price a little higher. The no-token bonus is what lifts protocols still waiting for a launch above the 416 tokened ones, which are set aside and never ranked — the board is the pre-token universe only.</p>
+    <p><code>implied value = 10^(6.3 + 3.0 × normalised score)</code>, so the top row lands near $2B and the bottom near $2M. Scale dominates on purpose: a venue holding $13B would issue a far larger token than a $8M protocol, whatever its category. Use the category filter to compare within one kind of protocol.</p>
+    <p>Each farm plan is generated from the protocol's own category, chains and scale — a DEX plan is not a lending plan — and every step says what to do, what it costs and how long it takes.</p>
+    <p class="note">Implied values are this radar's own estimates, not predictions and not promises. A protocol that records no token may still have one its record does not carry.</p>
+  </section>
+
+  <section class="panel charts">
+    <h2>Shape of the board</h2>
+    <figure>
+      <figcaption>Implied value by rank (log scale) — the curve falls fast, then flattens: a few launches would be huge, most are small.</figcaption>
+      <div id="chart-curve"></div>
+    </figure>
+    <figure>
+      <figcaption>TVL by category across all 758 protocols — where the money already sits.</figcaption>
+      <div id="chart-cats"></div>
+    </figure>
+  </section>
+</main>
+
+<footer>
+  <p>Built from the sealed DefiLlama snapshot. No network, no tracking, no prices fetched live: this page renders from the data file written beside it.</p>
+</footer>
+
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
